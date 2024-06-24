@@ -1,5 +1,5 @@
 use clap::Parser;
-use rwc::{get_file_bytes, get_file_char_count};
+use rwc::{get_file_bytes, get_file_char_count, get_file_lines_count};
 use std::path::PathBuf;
 
 #[derive(Parser, Debug)]
@@ -14,24 +14,27 @@ struct Args {
     /// Print the character counts
     #[arg(short = 'm', long)]
     chars: bool,
+
+    /// Print the newline counts
+    #[arg(short = 'l', long)]
+    lines: bool,
 }
 
 fn main() {
     let args = Args::parse();
 
-    if args.bytes {
-        println!(
-            "{} {}",
-            get_file_bytes(&args.file),
-            args.file.file_name().unwrap().to_str().unwrap()
-        );
-    }
+    let file_name = args.file.file_name().unwrap().to_str().unwrap();
 
-    if args.chars {
-        println!(
-            "{} {}",
-            get_file_char_count(&args.file),
-            args.file.file_name().unwrap().to_str().unwrap()
-        )
+    match (args.bytes, args.chars, args.lines) {
+        (false, false, false) => println!(
+            "  {} word {} {}",
+            get_file_lines_count(&args.file),
+            get_file_bytes(&args.file),
+            file_name
+        ),
+        (true, false, false) => println!("{} {}", get_file_bytes(&args.file), file_name),
+        (false, true, false) => println!("{} {}", get_file_char_count(&args.file), file_name),
+        (false, false, true) => println!("{} {}", get_file_lines_count(&args.file), file_name),
+        _ => println!("Invalid combination of arguments."),
     }
 }
