@@ -11,11 +11,11 @@ Usage: rwc [OPTIONS] <FILE>
 Arguments:
 <FILE>
 
-Options:
--c, --bytes Print the bytes counts
--m, --chars Print the character counts
--l, --lines Print the newline counts
--h, --help Print help
+Options:  
+-c, --bytes Print the bytes counts  
+-m, --chars Print the character counts  
+-l, --lines Print the newline counts  
+-h, --help Print help  
 -V, --version Print version
 
 ---
