@@ -1,3 +1,4 @@
+use bytecount;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::PathBuf;
@@ -15,12 +16,10 @@ pub fn get_file_bytes(file: &PathBuf) -> u64 {
 pub fn get_file_char_count(file: &PathBuf) -> u64 {
     let mut count = 0u64;
 
-    let mut buf_reader = BufReader::new(File::open(file).unwrap_or_else(|_| {
-        panic!(
-            "[get_file_char_count] Can't open the provided: '{:#?}'",
-            file
-        )
-    }));
+    let mut buf_reader =
+        BufReader::new(File::open(file).unwrap_or_else(|_| {
+            panic!("[get_file_char_count] Can't open provided file: '{file:#?}'")
+        }));
     let mut buf = Vec::<u8>::new();
 
     while buf_reader
@@ -38,4 +37,27 @@ pub fn get_file_char_count(file: &PathBuf) -> u64 {
     }
 
     count
+}
+
+pub fn get_file_lines_count(file: &PathBuf) -> u64 {
+    let mut counter = 0u64;
+    let mut buf_reader = BufReader::new(File::open(file).unwrap_or_else(|_| {
+        panic!("[get_file_lines_count] Can't open provided file: '{file:#?}'")
+    }));
+
+    loop {
+        let len = {
+            let buf = &buf_reader.fill_buf().unwrap();
+
+            if buf.is_empty() {
+                break;
+            }
+
+            counter += bytecount::count(buf, b'\n') as u64;
+            buf.len()
+        };
+        buf_reader.consume(len);
+    }
+
+    counter
 }
