@@ -14,6 +14,7 @@ Arguments:
 Options:
 -c, --bytes Print the bytes counts
 -m, --chars Print the character counts
+-l, --lines Print the newline counts
 -h, --help Print help
 -V, --version Print version
 
@@ -22,6 +23,7 @@ Options:
 ## Dependencies
 
 - clap 4.5.7 with derive: https://docs.rs/clap/latest/clap/index.html
+- bytecount 0.6.8: https://docs.rs/bytecount/0.6.8/bytecount/
 
 ---
 
